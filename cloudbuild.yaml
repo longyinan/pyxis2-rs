@@ -1,0 +1,64 @@
+substitutions:
+  REPO_NAME: fwvolumntest
+  _DEPLOY_REGION: asia-northeast1
+  _AR_HOSTNAME: asia-northeast1-docker.pkg.dev
+  _AR_REPOSITORY: cloud-run-source-deploy
+  _AR_PROJECT_ID: real-time-aggregation-stg
+  _PLATFORM: managed
+  _SERVICE_NAME: fw-rs
+  _BUCKET: fw-rs-source-volumn
+
+options:
+  substitutionOption: ALLOW_LOOSE
+  logging: CLOUD_LOGGING_ONLY
+
+steps:
+  - name: gcr.io/cloud-builders/docker
+    id: Build
+    args:
+      - build
+      - --no-cache
+      - -t
+      - $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - .
+      - -f
+      - Dockerfile
+
+  - name: gcr.io/cloud-builders/docker
+    id: Push
+    args:
+      - push
+      - $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    id: Deploy
+    entrypoint: gcloud
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - --platform=managed
+      - --image=$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID
+      - --region=$_DEPLOY_REGION
+      - --quiet
+
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
+    entrypoint: gcloud
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - --region=$_DEPLOY_REGION
+      - --add-volume=name=code-volume,type=cloud-storage,bucket=${_BUCKET},readonly=true
+      - --add-volume-mount=volume=code-volume,mount-path=/app/data
+
+images:
+  - $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+
+tags:
+  - gcp-cloud-build-deploy-cloud-run
+  - gcp-cloud-build-deploy-cloud-run-managed
+  - fw-volumn-test
