@@ -1,0 +1,7 @@
+.git
+.vagrant
+.DS_Store
+
+/100_rs/deploy_data/*
+/100_rs/lib/*
+/100_rs/htdocs/**

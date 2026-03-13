@@ -1,0 +1,17 @@
+FROM seti/php53
+
+COPY ./dokcer/php.ini /etc/php.ini
+COPY ./dokcer/000-default.cloudrun.conf /etc/apache2/sites-available/000-default.conf
+COPY ./dokcer/ports.cloudrun.conf /etc/apache2/ports.conf
+COPY ./dokcer/servername.conf /etc/apache2/conf-available/servername.conf
+COPY ./100_rs /var/www/100_rs
+
+RUN cp -f /etc/php.ini /etc/php53/apache2/php.ini \
+ && cp -f /etc/php.ini /etc/php53/cli/php.ini \
+ && apt-get update \
+ && apt-get install -y php53-mod-mcrypt php53-mod-pgsql \
+ && a2enconf servername
+
+EXPOSE 8080
+
+CMD ["/bin/sh", "-lc", "rm -f /var/run/apache2/* && . /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND"]

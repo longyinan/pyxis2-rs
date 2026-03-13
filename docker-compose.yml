@@ -1,0 +1,11 @@
+services:
+  php53:
+    build:
+      context: .
+      dockerfile: dokcer/Dockerfile
+    container_name: php53
+    ports:
+      - "80:80"
+    volumes:
+      - ./100_rs:/var/www/100_rs
+    restart: always
