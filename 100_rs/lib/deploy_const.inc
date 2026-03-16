@@ -16,13 +16,13 @@ require_once(dirname(__FILE__) . '/common_const.inc');
 /*----------------------------------------------------------------------------*
  開発管理DBへの接続情報 (デプロイ指示を確認、更新するために使用)
  *----------------------------------------------------------------------------*/
-define('DEVADMIN_DB_CONNECT_STRING', 'host=vmp2-local-dva01 port=5432 dbname=px2_db10 user=px2_dev_user password=jpgct4b2');
+define('DEVADMIN_DB_CONNECT_STRING', 'host=10.73.240.3 port=5432 dbname=px2_db10 user=px2_suv_user password=%)la+61fOc{L+GlI');
 
 
 /*----------------------------------------------------------------------------*
  自サーバーの実査回答DBへの接続情報 (回答テーブルの作成)
  *----------------------------------------------------------------------------*/
-define('RS_DB_CONNECT_STRING', 'host=localhost port=5432 dbname=px2_db90 user=px2_dev_user password=jpgct4b2');
+define('RS_DB_CONNECT_STRING', 'host=10.73.240.3 port=5432 dbname=px2_db90 user=px2_suv_user password=%)la+61fOc{L+GlI');
 
 
 /*----------------------------------------------------------------------------*
