@@ -1,11 +1,28 @@
 services:
   php53:
-    build:
-      context: .
-      dockerfile: dokcer/Dockerfile
+    build: ./docker
     container_name: php53
     ports:
       - "80:80"
     volumes:
       - ./100_rs:/var/www/100_rs
+    depends_on:
+      - pg18
     restart: always
+
+  pg18:
+    image: postgres:18
+    container_name: pg18
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpass
+      POSTGRES_INITDB_ARGS: "--auth-host=md5 --auth-local=trust"
+    volumes:
+      - pg18_data:/var/lib/postgresql
+    restart: always
+
+volumes:
+  pg18_data:
