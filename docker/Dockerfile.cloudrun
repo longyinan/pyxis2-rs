@@ -1,9 +1,9 @@
 FROM seti/php53
 
-COPY ./dokcer/php.ini /etc/php.ini
-COPY ./dokcer/000-default.cloudrun.conf /etc/apache2/sites-available/000-default.conf
-COPY ./dokcer/ports.cloudrun.conf /etc/apache2/ports.conf
-COPY ./dokcer/servername.conf /etc/apache2/conf-available/servername.conf
+COPY ./docker/php.ini /etc/php.ini
+COPY ./docker/000-default.cloudrun.conf /etc/apache2/sites-available/000-default.conf
+COPY ./docker/ports.cloudrun.conf /etc/apache2/ports.conf
+COPY ./docker/servername.conf /etc/apache2/conf-available/servername.conf
 COPY ./100_rs /var/www/100_rs
 
 RUN cp -f /etc/php.ini /etc/php53/apache2/php.ini \
